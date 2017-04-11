@@ -1,0 +1,9 @@
+D:\Project\C#\MyProgram\TaskManager\TaskManager\obj\Debug\TaskManager.csprojResolveAssemblyReference.cache
+D:\Project\C#\MyProgram\TaskManager\TaskManager\obj\Debug\TaskManager.Form1.resources
+D:\Project\C#\MyProgram\TaskManager\TaskManager\obj\Debug\TaskManager.Properties.Resources.resources
+D:\Project\C#\MyProgram\TaskManager\TaskManager\obj\Debug\TaskManager.csproj.GenerateResource.Cache
+D:\Project\C#\MyProgram\TaskManager\TaskManager\bin\Debug\TaskManager.exe.config
+D:\Project\C#\MyProgram\TaskManager\TaskManager\bin\Debug\TaskManager.exe
+D:\Project\C#\MyProgram\TaskManager\TaskManager\bin\Debug\TaskManager.pdb
+D:\Project\C#\MyProgram\TaskManager\TaskManager\obj\Debug\TaskManager.exe
+D:\Project\C#\MyProgram\TaskManager\TaskManager\obj\Debug\TaskManager.pdb
