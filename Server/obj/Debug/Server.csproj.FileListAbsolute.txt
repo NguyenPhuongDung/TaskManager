@@ -1,0 +1,12 @@
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\bin\Debug\Server.exe.config
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\obj\Debug\Server.frm_Server.resources
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\obj\Debug\Server.frm_Setting.resources
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\obj\Debug\Server.Properties.Resources.resources
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\obj\Debug\Server.csproj.GenerateResource.Cache
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\bin\Debug\Server.exe
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\bin\Debug\Server.pdb
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\bin\Debug\TaskManager.exe
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\bin\Debug\TaskManager.pdb
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\obj\Debug\Server.exe
+D:\University\DA_CSNM\TaskManager\TaskManager\Server\obj\Debug\Server.pdb
