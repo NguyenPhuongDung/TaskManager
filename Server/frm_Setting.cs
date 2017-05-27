@@ -27,10 +27,8 @@ namespace Server
                 config.Load(path);
                 txt_IP.Text = config.SelectSingleNode("//ip").InnerText;
                 txt_Port.Text = config.SelectSingleNode("//port").InnerText;
-                txt_PortRM.Text = config.SelectSingleNode("//portRM").InnerText;
                 IPAddress.Parse(txt_IP.Text);
                 Int32.Parse(txt_Port.Text);
-                Int32.Parse(txt_PortRM.Text);
             }
             catch
             {
@@ -39,7 +37,7 @@ namespace Server
         }
         private void btn_OK_Click(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(txt_IP.Text) && !String.IsNullOrEmpty(txt_Port.Text) && !String.IsNullOrEmpty(txt_PortRM.Text))
+            if (!String.IsNullOrEmpty(txt_IP.Text) && !String.IsNullOrEmpty(txt_Port.Text))
             {
                 try
                 {
@@ -48,7 +46,6 @@ namespace Server
                     config.Load(path);
                     config.SelectSingleNode("//ip").InnerText = txt_IP.Text;
                     config.SelectSingleNode("//port").InnerText = txt_Port.Text;
-                    config.SelectSingleNode("//portRM").InnerText = txt_PortRM.Text;
                     config.Save(path);
                     MessageBox.Show("Cập nhật thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -66,7 +63,6 @@ namespace Server
             string contentXML = "<config>" +
                                 "<ip></ip>" +
                                 "<port></port>" +
-                                "<portRM></portRM>" +
                                 "</config>";
             XmlDocument config = new XmlDocument();
             config.LoadXml(contentXML);

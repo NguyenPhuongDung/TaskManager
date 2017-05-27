@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.btn_Create = new System.Windows.Forms.Button();
-            this.txt_PortRM = new System.Windows.Forms.TextBox();
-            this.lbl_PortRM = new System.Windows.Forms.Label();
             this.txt_Port = new System.Windows.Forms.TextBox();
             this.lbl_Port = new System.Windows.Forms.Label();
             this.btn_OK = new System.Windows.Forms.Button();
@@ -40,7 +38,7 @@
             // 
             // btn_Create
             // 
-            this.btn_Create.Location = new System.Drawing.Point(9, 96);
+            this.btn_Create.Location = new System.Drawing.Point(9, 70);
             this.btn_Create.Margin = new System.Windows.Forms.Padding(4);
             this.btn_Create.Name = "btn_Create";
             this.btn_Create.Size = new System.Drawing.Size(172, 28);
@@ -48,24 +46,6 @@
             this.btn_Create.Text = "Tạo lại file config";
             this.btn_Create.UseVisualStyleBackColor = true;
             this.btn_Create.Click += new System.EventHandler(this.btn_Create_Click);
-            // 
-            // txt_PortRM
-            // 
-            this.txt_PortRM.Location = new System.Drawing.Point(120, 66);
-            this.txt_PortRM.Margin = new System.Windows.Forms.Padding(4);
-            this.txt_PortRM.Name = "txt_PortRM";
-            this.txt_PortRM.Size = new System.Drawing.Size(197, 20);
-            this.txt_PortRM.TabIndex = 20;
-            // 
-            // lbl_PortRM
-            // 
-            this.lbl_PortRM.AutoSize = true;
-            this.lbl_PortRM.Location = new System.Drawing.Point(13, 69);
-            this.lbl_PortRM.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lbl_PortRM.Name = "lbl_PortRM";
-            this.lbl_PortRM.Size = new System.Drawing.Size(72, 13);
-            this.lbl_PortRM.TabIndex = 21;
-            this.lbl_PortRM.Text = "Cổng Remote";
             // 
             // txt_Port
             // 
@@ -87,7 +67,7 @@
             // 
             // btn_OK
             // 
-            this.btn_OK.Location = new System.Drawing.Point(217, 96);
+            this.btn_OK.Location = new System.Drawing.Point(217, 70);
             this.btn_OK.Margin = new System.Windows.Forms.Padding(4);
             this.btn_OK.Name = "btn_OK";
             this.btn_OK.Size = new System.Drawing.Size(100, 28);
@@ -118,10 +98,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(330, 141);
+            this.ClientSize = new System.Drawing.Size(330, 108);
             this.Controls.Add(this.btn_Create);
-            this.Controls.Add(this.txt_PortRM);
-            this.Controls.Add(this.lbl_PortRM);
             this.Controls.Add(this.txt_Port);
             this.Controls.Add(this.lbl_Port);
             this.Controls.Add(this.btn_OK);
@@ -138,8 +116,6 @@
         #endregion
 
         private System.Windows.Forms.Button btn_Create;
-        private System.Windows.Forms.TextBox txt_PortRM;
-        private System.Windows.Forms.Label lbl_PortRM;
         private System.Windows.Forms.TextBox txt_Port;
         private System.Windows.Forms.Label lbl_Port;
         private System.Windows.Forms.Button btn_OK;

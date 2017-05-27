@@ -13,7 +13,6 @@ namespace Server
         public int _id;
         public TcpClient _tcpClient;
         public Thread _thread;
-        public bool _mouse = false;
 
         public clientManager(int id, TcpClient tcpClient)
         {

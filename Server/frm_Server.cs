@@ -23,20 +23,19 @@ namespace Server
     {
         public List<clientManager> _lstClient;
 
-        TcpListener _tcpListener;
-        TcpClient _tcpClient;
+        TcpListener _tcpListener;// listnenner
+        TcpClient _tcpClient;// tcp was accept
         Thread _thread;
-        private const int BUFFER_SIZE = 1024 * 1024;
-        clientManager _clientMng;
+        clientManager _clientMng;// info of client
         IPAddress _svrIP;
         int _svrPort;
-        int _svrPortRM;
         int _id;
         Info InfoFromClient;
         public frm_Server()
         {
             InitializeComponent();
         }
+        //load ip and port to connect
         private void loadCfg()
         {
             try
@@ -46,7 +45,6 @@ namespace Server
                 config.Load(path);
                 _svrIP = IPAddress.Parse(config.SelectSingleNode("//ip").InnerText);
                 _svrPort = Int32.Parse(config.SelectSingleNode("//port").InnerText);
-                _svrPortRM = Int32.Parse(config.SelectSingleNode("//portRM").InnerText);
             }
             catch
             {
@@ -55,7 +53,7 @@ namespace Server
                 frmSetting.Dispose();
             }
         }
-
+        //begin accept connect from client and add to dgv
         private void listener()
         {
             _id = 1;
@@ -63,7 +61,7 @@ namespace Server
             {
                 _tcpListener = new TcpListener(_svrIP, _svrPort);
                 _tcpListener.Start();
-                lbl_Info.Text = "SERVER - IP: " + _svrIP + "; PORT: " + _svrPort + "; PORT REMOTE: " + _svrPortRM;
+                lbl_Info.Text = "SERVER - IP: " + _svrIP + "; PORT: " + _svrPort;
                 while (true)
                 {
                     _tcpClient = _tcpListener.AcceptTcpClient();
@@ -86,7 +84,7 @@ namespace Server
                 }
             }
         }
-
+        // begin listenner from messager was send by client
         private void doListen()
         {
             TcpClient tcpClient = _tcpClient;
@@ -112,6 +110,7 @@ namespace Server
                         InfoFromClient = (Info)DeserializeData(data);
                         if (InfoFromClient != null)
                         {
+                            listProcess.Clear();
                             LoadProcess();
                         }
                         else
@@ -119,7 +118,7 @@ namespace Server
                             MessageBox.Show("NA");
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         string receive = Encoding.UTF8.GetString(buffer).Trim();
                         string[] spl = receive.Split('|');
@@ -145,16 +144,6 @@ namespace Server
                                     }
                                 }
                                 break;
-                            case "USB":
-                                for (int i = 0; i < dataGridView.Rows.Count; i++)
-                                {
-                                    if (Equals(dataGridView.Rows[i].Cells[0].Value.ToString(), client._id.ToString()))
-                                    {
-                                        dataGridView.Rows[i].Cells[3].Value = spl[1];
-                                        break;
-                                    }
-                                }
-                                break;
                             case "EXIT":
                                 for (int i = 0; i < dataGridView.Rows.Count; i++)
                                 {
@@ -171,11 +160,6 @@ namespace Server
                                     }
                                 }
                                 break;
-                            case "CHAT":
-                                sendMsg("RESEND|" + receive, client._tcpClient);
-                                break;
-
-
                         }
                     }
                 }
@@ -201,6 +185,46 @@ namespace Server
             _thread.Start();
             _lstClient = new List<clientManager>(); ;
         }
+        private void btnLoadProcess_Click(object sender, EventArgs e)
+        {
+            int id = getId();
+            if (id != 0)
+            {
+                clientManager client = searchClient(id);
+                if (client != null)
+                {
+                    sendMsg("PROCESS|", client._tcpClient);
+                }
+            }
+            else
+                MessageBox.Show("Chọn máy cần thao tác!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+        }
+        //EXIT
+        private void frm_Server_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("Bạn có muốn thoát chương trình không?", "Thông báo!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                e.Cancel = true;
+            else
+            {
+                try
+                {
+                    foreach (clientManager client in _lstClient)
+                    {
+                        try
+                        {
+                            sendMsg("EXIT|", client._tcpClient);
+                            client._thread.Abort();
+                        }
+                        catch { }
+                    }
+                    _thread.Abort();
+                    _tcpListener.Stop();
+
+                }
+                catch { }
+            }
+        }
 
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -208,6 +232,81 @@ namespace Server
             frmSetting.ShowDialog();
             frmSetting.Dispose();
         }
+        //PROCESS
+        private void processToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = getId();
+            if (id != 0)
+            {
+                clientManager client = searchClient(id);
+                if (client != null)
+                {
+                    sendMsg("PROCESS|", client._tcpClient);
+                }
+            }
+            else
+                MessageBox.Show("Chọn máy cần thao tác!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+        }
+        //EXIT
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (clientManager client in _lstClient)
+                {
+                    try
+                    {
+                        sendMsg("EXIT|", client._tcpClient);
+                        client._thread.Abort();
+                    }
+                    catch { }
+                }
+                _tcpListener.Stop();
+                _thread.Abort();
+                dataGridView.Rows.Clear();
+            }
+            catch { }
+            frm_Server_Load(sender, e);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+        //RESTART
+        private void restartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int id = getId();
+            if (id != 0)
+            {
+                clientManager client = searchClient(id);
+                if (client != null)
+                {
+                    sendMsg("RESTART|", client._tcpClient);
+                }
+            }
+            else
+                MessageBox.Show("Chọn máy cần thao tác!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+        //SHUTDOWN
+        private void shutdownToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            int id = getId();
+            if (id != 0)
+            {
+                clientManager client = searchClient(id);
+                if (client != null)
+                {
+                    sendMsg("SHUTDOWN|", client._tcpClient);
+                }
+            }
+            else
+                MessageBox.Show("Chọn máy cần thao tác!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+        //ENDTASK
+
+
         private int getId()
         {
             try
@@ -228,54 +327,20 @@ namespace Server
             }
             return null;
         }
-        private void frm_Server_FormClosing(object sender, FormClosingEventArgs e)
+        void GetProcess(ProcessClient[] listProcess)
         {
-            if (MessageBox.Show("Bạn có muốn thoát chương trình không?", "Thông báo!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                e.Cancel = true;
-            else
-            {
-                try
-                {
-                    foreach (clientManager client in _lstClient)
-                    {
-                        try
-                        {
-                            sendMsg("EXIT|", client._tcpClient);
-                            if (client._mouse)
-                                sendMsg("MOUSE_ENA|", client._tcpClient);
-                            client._thread.Abort();
-                        }
-                        catch { }
-                    }
-                    _thread.Abort();
-                    _tcpListener.Stop();
 
-                }
-                catch { }
-            }
-        }
 
-        private void processToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            int id = getId();
-            if (id != 0)
+            this.listProcess.Items.Clear();
+            foreach (var item in listProcess)
             {
-                clientManager client = searchClient(id);
-                if (client != null)
-                {
-                    sendMsg("PROCESS|", client._tcpClient);
-                }
+                ListViewItem newItem = new ListViewItem() { Text = item.nameProcess };
+                newItem.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = item.idProcess.ToString() });
+                newItem.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = (item.cpu + " %") });
+                newItem.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = (Math.Round(item.ram, 2) + " MB") });
+                this.listProcess.Items.Add(newItem);
             }
 
-        }
-        //process
-        // giai nen 1 mang byte thanh 1 doi tuong (bject)
-        public object DeserializeData(byte[] theByteArray)
-        {
-                MemoryStream ms = new MemoryStream(theByteArray);
-                BinaryFormatter bf1 = new BinaryFormatter();
-                ms.Position = 0;
-                return bf1.Deserialize(ms);
         }
         void LoadProcess()
         {
@@ -284,54 +349,50 @@ namespace Server
             colCPU.Text = " CPU " + Math.Round(InfoFromClient.totalCPU, 2) + " %";
             colMemory.Text = " RAM " + Math.Round(InfoFromClient.totalMemory, 2) + "%";
         }
-        void GetProcess(ProcessClient[] listProcess)
+        // giai nen 1 mang byte thanh 1 doi tuong (bject)
+        public object DeserializeData(byte[] theByteArray)
         {
-
-
-            dgvlistProcess.Items.Clear();
-            foreach (var item in listProcess)
-            {
-                ListViewItem newItem = new ListViewItem() { Text = item.nameProcess };
-                newItem.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = item.idProcess.ToString() });
-                newItem.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = (item.cpu + " %") });
-                newItem.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = (Math.Round(item.ram, 2) + " MB") });
-                dgvlistProcess.Items.Add(newItem);
-            }
-
-        }
-
-        private void btnLoadProcess_Click(object sender, EventArgs e)
-        {
-
+            MemoryStream ms = new MemoryStream(theByteArray);
+            BinaryFormatter bf1 = new BinaryFormatter();
+            ms.Position = 0;
+            return bf1.Deserialize(ms);
         }
 
         private void endTaskToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try
             {
                 int id = getId();
                 if (id != 0)
                 {
-                    clientManager client = searchClient(id);
-                    if (client != null)
+                    if (listProcess.SelectedItems.Count > 0)
                     {
-                        if (dgvlistProcess.SelectedItems.Count > 0)
+                        clientManager client = searchClient(id);
+                        if (client != null)
                         {
-                            foreach (var item in InfoFromClient.process)
-                            {
-                                if (item.idProcess == Convert.ToInt32(dgvlistProcess.SelectedItems[1]))
-                                {
-                                    sendMsg("ENDPROCESS|" + item.idProcess, client._tcpClient);
-                                }
-                            }
+                            sendMsg("ENDTASK|" + listProcess.SelectedItems[0].SubItems[1].Text, client._tcpClient);
                         }
                     }
                 }
-                
+                else
+                    MessageBox.Show("Chọn máy cần thao tác!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch
+        }
+
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             {
-                MessageBox.Show("Bạn cần truy cập với quyền Admistrator");
+                int id = getId();
+                if (id != 0)
+                {
+
+                    clientManager client = searchClient(id);
+                    if (client != null)
+                    {
+                        sendMsg("TEST|", client._tcpClient);
+                    }
+                }
+                else
+                    MessageBox.Show("Chọn máy cần thao tác!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

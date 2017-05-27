@@ -21,12 +21,9 @@ namespace TaskManager
     {
 
         TcpClient _tcpClient;
-        Thread _thread, _threadRM;
-
+        Thread _thread;
         IPAddress _svrIP;
         int _svrPort;
-        int _svrPortRM;
-        bool _exit = false;
         Process[] _process;
         List<ProcessClient> list;
         Info[] allInfo = new Info[100];
@@ -35,6 +32,7 @@ namespace TaskManager
         {
             InitializeComponent();
         }
+        //load xml to connect
         private void loadCfg()
         {
             try
@@ -44,7 +42,6 @@ namespace TaskManager
                 config.Load(path);
                 _svrIP = IPAddress.Parse(config.SelectSingleNode("//ip").InnerText);
                 _svrPort = Int32.Parse(config.SelectSingleNode("//port").InnerText);
-                _svrPortRM = Int32.Parse(config.SelectSingleNode("//portRM").InnerText);
             }
             catch
             {
@@ -53,6 +50,7 @@ namespace TaskManager
                 frmSetting.Dispose();
             }
         }
+        //connect
         private void connect()
         {
             try
@@ -70,6 +68,7 @@ namespace TaskManager
             }
 
         }
+        //send info
         private void sendInfo()
         {
             string msg;
@@ -102,31 +101,54 @@ namespace TaskManager
                     string[] spl = receive.Split('|');
                     switch (spl[0].ToUpper())
                     {
-
                         case "PROCESS":
                             allProcess = new Info(getCPUCounter(), getMemoryCounter(), getData());
                             byte[] data = SerializeData(allProcess);
-                            Info ifo = (Info)DeserializeData(data);
-                            try
-                            {
-                                netStream.Write(data, 0, data.Length);
-                            }
-                            catch (Exception e) { MessageBox.Show(e.Message); }
+                            netStream.Write(data, 0, data.Length);
                             netStream.Flush();
-                            netStream.Close();
-                            _tcpClient.Close();
+                            //netStream.Close();
+                            //_tcpClient.Close();
                             break;
-
+                        case "RESTART":
+                            sendMsg("EXIT");
+                            Process pro_res = new Process();
+                            ProcessStartInfo proInfo_res = new ProcessStartInfo();
+                            proInfo_res.WindowStyle = ProcessWindowStyle.Hidden;
+                            proInfo_res.FileName = "shutdown.exe";
+                            proInfo_res.Arguments = "/f -r -t 00";
+                            pro_res.StartInfo = proInfo_res;
+                            pro_res.Start();
+                            this.Close();
+                            break;
                         case "EXIT":
                             lbl_Info.Text = "Server đã tắt!";
                             _thread.Abort();
                             _tcpClient.Close();
                             break;
-                        case "SENDALL":
-                            MessageBox.Show(spl[1], "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        case "SHUTDOWN":
+                            sendMsg("EXIT");
+                            Process pro_shut = new Process();
+                            ProcessStartInfo proInfo_shut = new ProcessStartInfo();
+                            proInfo_shut.WindowStyle = ProcessWindowStyle.Hidden;
+                            proInfo_shut.FileName = "shutdown.exe";
+                            proInfo_shut.Arguments = "/f -s -t 00";
+                            pro_shut.StartInfo = proInfo_shut;
+                            pro_shut.Start();
+                            this.Close();
                             break;
-                        case "ENDPROCESS":
-                            sendMsg(spl[1] + "|" + spl[2]);
+                        case "ENDTASK":
+                            Process p;
+                            int id =Convert.ToInt32(spl[1]);
+                            try
+                            {
+                                p = Process.GetProcessById(id);
+                                p.Kill();
+                            }
+
+                           catch
+                            {
+                                MessageBox.Show("Không tìm thấy process");
+                            }
                             break;
                     }
                 }
@@ -156,8 +178,6 @@ namespace TaskManager
             connect();
         }
 
-        //process
-        // nen data thanh 1 mang byte
         // nen data thanh 1 mang byte
         public byte[] SerializeData(Object o)
         {
@@ -178,7 +198,6 @@ namespace TaskManager
         public ProcessClient[] getData()
         {
             _process = Process.GetProcesses();
-            // tao va lay du lieu tu form
             list = new List<ProcessClient>();
             foreach (Process item in _process)
             {
