@@ -99,6 +99,7 @@
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.exitToolStripMenuItem.Text = "Thoát";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // groupBox2
             // 
@@ -175,6 +176,8 @@
             this.Controls.Add(this.groupBox2);
             this.Name = "frm_Client";
             this.Text = "frm_Client";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_Client_FormClosing);
+            this.Load += new System.EventHandler(this.frm_Client_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.groupBox2.ResumeLayout(false);

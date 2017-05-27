@@ -56,6 +56,8 @@
             this.lbl_Info = new System.Windows.Forms.Label();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.btnLoadProcess = new System.Windows.Forms.Button();
+            this.btnNewProcess = new System.Windows.Forms.Button();
+            this.txtNewProcess = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -212,21 +214,21 @@
             // restartToolStripMenuItem
             // 
             this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
-            this.restartToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.restartToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.restartToolStripMenuItem.Text = "Khởi động lại";
             this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
             // 
             // shutdownToolStripMenuItem1
             // 
             this.shutdownToolStripMenuItem1.Name = "shutdownToolStripMenuItem1";
-            this.shutdownToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.shutdownToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
             this.shutdownToolStripMenuItem1.Text = "Tắt máy";
             this.shutdownToolStripMenuItem1.Click += new System.EventHandler(this.shutdownToolStripMenuItem1_Click);
             // 
             // processToolStripMenuItem
             // 
             this.processToolStripMenuItem.Name = "processToolStripMenuItem";
-            this.processToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.processToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.processToolStripMenuItem.Text = "Process";
             this.processToolStripMenuItem.Click += new System.EventHandler(this.processToolStripMenuItem_Click);
             // 
@@ -291,11 +293,30 @@
             this.btnLoadProcess.UseVisualStyleBackColor = true;
             this.btnLoadProcess.Click += new System.EventHandler(this.btnLoadProcess_Click);
             // 
+            // btnNewProcess
+            // 
+            this.btnNewProcess.Location = new System.Drawing.Point(471, 69);
+            this.btnNewProcess.Name = "btnNewProcess";
+            this.btnNewProcess.Size = new System.Drawing.Size(99, 23);
+            this.btnNewProcess.TabIndex = 16;
+            this.btnNewProcess.Text = "New Process";
+            this.btnNewProcess.UseVisualStyleBackColor = true;
+            this.btnNewProcess.Click += new System.EventHandler(this.btnNewProcess_Click);
+            // 
+            // txtNewProcess
+            // 
+            this.txtNewProcess.Location = new System.Drawing.Point(594, 70);
+            this.txtNewProcess.Name = "txtNewProcess";
+            this.txtNewProcess.Size = new System.Drawing.Size(165, 20);
+            this.txtNewProcess.TabIndex = 17;
+            // 
             // frm_Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(964, 473);
+            this.Controls.Add(this.txtNewProcess);
+            this.Controls.Add(this.btnNewProcess);
             this.Controls.Add(this.btnLoadProcess);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -348,5 +369,7 @@
         private System.Windows.Forms.Button btnLoadProcess;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem endTaskToolStripMenuItem;
+        private System.Windows.Forms.Button btnNewProcess;
+        private System.Windows.Forms.TextBox txtNewProcess;
     }
 }

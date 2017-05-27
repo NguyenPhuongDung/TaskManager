@@ -150,6 +150,10 @@ namespace TaskManager
                                 MessageBox.Show("Không tìm thấy process");
                             }
                             break;
+                        case "NEWPROCESS":
+                            Process.Start(spl[1]);
+
+                            break;
                     }
                 }
                 catch
@@ -177,7 +181,23 @@ namespace TaskManager
             loadCfg();
             connect();
         }
-
+        private void frm_Client_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("Bạn có muốn thoát chương trình không?", "Thông báo!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                e.Cancel = true;
+            else
+            {
+                try
+                {
+                    string msg = "EXIT";
+                    sendMsg(msg);
+                    _tcpClient.Close();
+                    _thread.Abort();
+                }
+                catch { }
+                Environment.Exit(1);
+            }
+        }
         // nen data thanh 1 mang byte
         public byte[] SerializeData(Object o)
         {
@@ -260,8 +280,9 @@ namespace TaskManager
 
         }
 
-
-
-
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(1);
+        }
     }
 }

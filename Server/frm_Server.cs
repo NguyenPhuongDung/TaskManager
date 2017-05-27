@@ -110,7 +110,6 @@ namespace Server
                         InfoFromClient = (Info)DeserializeData(data);
                         if (InfoFromClient != null)
                         {
-                            listProcess.Clear();
                             LoadProcess();
                         }
                         else
@@ -223,6 +222,7 @@ namespace Server
 
                 }
                 catch { }
+                Environment.Exit(1);
             }
         }
 
@@ -272,7 +272,7 @@ namespace Server
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            Environment.Exit(1);
         }
         //RESTART
         private void restartToolStripMenuItem_Click(object sender, EventArgs e)
@@ -394,6 +394,24 @@ namespace Server
                 else
                     MessageBox.Show("Chọn máy cần thao tác!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void btnNewProcess_Click(object sender, EventArgs e)
+        {
+            int id = getId();
+            if (id != 0)
+            {
+                clientManager client = searchClient(id);
+                if (client != null)
+                {
+                    string msg = "NEWPROCESS|" + txtNewProcess.Text;
+                    sendMsg(msg, client._tcpClient);
+                    txtNewProcess.Clear();
+                }
+            }
+            else
+                MessageBox.Show("Chọn máy cần thao tác!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
         }
     }
 }
